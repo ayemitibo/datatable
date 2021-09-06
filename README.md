@@ -1,5 +1,3 @@
-# FinDox Front-end Interview Task
-
 ### Review Instructions
 
 To run the app locally please clone the repo and install the dependencies with:
