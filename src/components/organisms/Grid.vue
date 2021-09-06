@@ -4,7 +4,7 @@
       role="table"
       class="text-xs"
       :aria-label="label"
-      :aria-rowcount="items.length"
+      :aria-rowcount="data.length"
     >
       <div role="rowgroup">
         <div class="grid-header" role="row">
@@ -13,7 +13,7 @@
             :key="column.value"
             class="flex-1"
             :column="column"
-            :items="items"
+            :items="data"
             @sort="onSort"
             @filter="onFilter"
           >
@@ -109,6 +109,7 @@ import IconPersonAdd from "/@src/assets/icons/person-add.svg?component";
 import IconExport from "/@src/assets/icons/export.svg?component";
 import IconChevronDoubleRight from "/@src/assets/icons/chevron-double-right.svg?component";
 import IconChevronDoubleLeft from "/@src/assets/icons/chevron-double-left.svg?component";
+import { useGetDealData, useSearch, usePagination } from "/@src/composables";
 
 export default defineComponent({
   components: {
@@ -123,22 +124,21 @@ export default defineComponent({
   },
   props: {
     label: { type: String, default: "" },
-    items: {
+    data: {
       type: Array as PropType<Record<string, any>[]>,
       default: () => [],
     },
     itemKey: { type: String, default: "id" },
-    headers: {
-      type: Array as PropType<{ text: string; value: string }[]>,
-      required: true,
-    },
     exportFileName: { type: String, default: "findox-sheet" },
     exportWorksheetName: { type: String, default: "Worksheet" },
     page: { type: Number, default: 1 },
     totalPages: { type: Number, default: 1 },
+    options: {
+      type: Object,
+    },
   },
   emits: ["prev", "next"],
-  setup(props, context) {
+  setup(props) {
     const sortBy = ref("");
     const sortDesc = ref(true);
     const filterBy = ref<Record<string, Set<string>>>({});
@@ -152,17 +152,25 @@ export default defineComponent({
     const hasPrev = computed(() => props.page > 1);
     const hasNext = computed(() => props.page < props.totalPages);
 
+    let mappedHeaders: string[] = [];
+
+    mappedHeaders = Object.keys(props.options?.headings);
+
+    let headers = mappedHeaders.map((item) => {
+      return { value: item, text: props.options?.headings[item] };
+    });
+
     const columns = computed(() => {
       if (selectedColumns.value.size) {
-        return props.headers.filter((header) =>
+        return headers.filter((header) =>
           selectedColumns.value.has(header.value)
         );
       }
-      return props.headers;
+      return headers;
     });
 
     const rows = computed(() => {
-      let result = props.items.slice();
+      let result = props.data.slice();
 
       const filteredColumns = Object.keys(filterBy.value);
 
@@ -274,6 +282,7 @@ export default defineComponent({
       onFilterColumns,
       exportSheet,
       selectedRowIdsSet,
+      headers,
     };
   },
 });
