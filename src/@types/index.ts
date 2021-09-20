@@ -161,5 +161,4 @@ export interface SourceFile {
 export interface Options{
   sortable?: [],
   perPage : number,
-  headings : 
 }
