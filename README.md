@@ -18,9 +18,43 @@ To run the unit tests use this command:
 $ npm run test
 ```
 
-### Todo
+### Usage
+```
+/views/Index.vue
+```
 
-- Refactor grid component logic into several composable functions
-- Improve test coverage
-- Implement column resizing
-- Add column filter indicators
+```
+    <VTable :options="options" :data="deals">
+      <template #dealName="{ value }">
+        <span
+          class="
+            inline-flex
+            items-center
+            justify-center
+            px-2
+            py-1
+            text-xs
+            font-bold
+            leading-none
+            text-red-100
+            bg-red-600
+            rounded-full
+          "
+          >Deal</span
+        >
+        {{ value }}
+      </template>
+    </VTable>
+```
+
+
+```
+ options: {
+        headings: {
+          issuer: { title: "Issuer", priority: 1 },
+          dealName: { title: "deal Name", priority: 1 },
+          industry: { title: "Industry", priority: 1 },
+          agent: "Agent",
+        },
+      },
+```
