@@ -1,7 +1,6 @@
 <template>
   <div>
     <VTable :options="options" :data="deals">
-      <template #issuer="{ value }"> Hello {{ value }} </template>
       <template #dealName="{ value }">
         <span
           class="
@@ -36,9 +35,9 @@ export default defineComponent({
     return {
       options: {
         headings: {
-          issuer: "Issuer",
-          dealName: "deal Name",
-          industry: "Industry",
+          issuer: { title: "Issuer", priority: 1 },
+          dealName: { title: "deal Name", priority: 1 },
+          industry: { title: "Industry", priority: 1 },
           agent: "Agent",
         },
       },

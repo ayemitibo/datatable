@@ -16,6 +16,7 @@
             :items="data"
             @sort="onSort"
             @filter="onFilter"
+            v-show="isLargeScreen || column.text.priority"
           >
             <button
               class="grid-cell capitalize"
@@ -28,7 +29,7 @@
                   : 'none'
               "
             >
-              {{ column.text }}
+              {{ column.text.title || column.text }}
             </button>
           </ColumnSettingsPopover>
         </div>
@@ -52,6 +53,7 @@
             :key="column.value"
             class="grid-cell flex-1 truncate"
             role="cell"
+            v-show="isLargeScreen || column.text.priority"
           >
             <slot
               :name="column.value"
@@ -109,7 +111,7 @@ import IconPersonAdd from "/@src/assets/icons/person-add.svg?component";
 import IconExport from "/@src/assets/icons/export.svg?component";
 import IconChevronDoubleRight from "/@src/assets/icons/chevron-double-right.svg?component";
 import IconChevronDoubleLeft from "/@src/assets/icons/chevron-double-left.svg?component";
-import { useGetDealData, useSearch, usePagination } from "/@src/composables";
+import { useMediaQuery } from "@vueuse/core";
 
 export default defineComponent({
   components: {
@@ -145,6 +147,8 @@ export default defineComponent({
     const selectedColumns = ref(new Set());
     const selectedRows: Record<string, any>[] = [];
     const selectedRowIdsSet = ref(new Set()); // using this for quick lookups to highlight selected rows
+
+    const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
     const hasAppliedFilters = computed(
       () => !!Object.keys(filterBy.value).length
@@ -283,6 +287,7 @@ export default defineComponent({
       exportSheet,
       selectedRowIdsSet,
       headers,
+      isLargeScreen,
     };
   },
 });
